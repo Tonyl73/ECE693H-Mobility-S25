@@ -60,7 +60,7 @@ We will use a top-down tracking approach leveraging:
 - Keep discussions and issues organized in the repository.
 
 ## Lead Software Engineers
--Byron Soriano
--Matthew Matsuo
+-Byron 
+-Matthew 
 
 
