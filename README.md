@@ -59,7 +59,7 @@ We will use a top-down tracking approach leveraging:
 - Document major changes in the `docs/` folder.
 - Keep discussions and issues organized in the repository.
 
-##Lead Software Engineers
+## Lead Software Engineers
 -Byron Soriano
 -Matthew Matsuo
 
