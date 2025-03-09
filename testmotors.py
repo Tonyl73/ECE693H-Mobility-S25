@@ -10,10 +10,6 @@ AIN2 = pwmio.PWMOut(board.A1, frequency=1000, duty_cycle=0)  # PWM for direction
 BIN1 = pwmio.PWMOut(board.A3, frequency=1000, duty_cycle=0)  # PWM for direction 1
 BIN2 = pwmio.PWMOut(board.A4, frequency=1000, duty_cycle=0)  # PWM for direction 2
 
-# STBY pin (if required by the motor driver)
-# STBY = digitalio.DigitalInOut(board.D4)
-# STBY.direction = digitalio.Direction.OUTPUT
-# STBY.value = True  # Always enabled
 
 def motor_forward1(speed):
     """Move motor 1 forward at a given speed (0-65535)."""
