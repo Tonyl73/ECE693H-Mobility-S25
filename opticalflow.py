@@ -26,18 +26,26 @@ class PAA5100JE:
     def write_register(self, reg, value):
         """Write a value to a register."""
         self.cs.value = False  # Select sensor
-        with self.spi as spi_lock:  # Lock SPI bus
-            self.spi.write(bytearray([reg | 0x80, value]))  # Write with the MSB set to 1
+        if not self.spi.try_lock():  # Try to acquire SPI lock
+            raise RuntimeError("SPI bus is busy")
+        try:
+            self.spi.write(bytearray([reg | 0x80, value]))  # MSB set for write
+        finally:
+            self.spi.unlock()  # Always unlock SPI bus after the transaction
         self.cs.value = True  # Deselect sensor
         time.sleep(0.00005)  # 50µs delay for the sensor to process
 
     def read_register(self, reg):
         """Read a value from a register."""
         self.cs.value = False  # Select sensor
-        with self.spi as spi_lock:  # Lock SPI bus
+        if not self.spi.try_lock():  # Try to acquire SPI lock
+            raise RuntimeError("SPI bus is busy")
+        try:
             self.spi.write(bytearray([reg & 0x7F]))  # Send register address (MSB set to 0)
             result = bytearray(1)
             self.spi.readinto(result)  # Read a byte into the result array
+        finally:
+            self.spi.unlock()  # Always unlock SPI bus after the transaction
         self.cs.value = True  # Deselect sensor
         return result[0]
 
@@ -45,9 +53,9 @@ class PAA5100JE:
         """Initialize the sensor and check if it's detected."""
         prod_id = self.read_register(0x00)  # Read the Product ID register
         if prod_id == 0x49:
-            print("PAA5100JE detected!")
+            print("✅ PAA5100JE detected!")
         else:
-            print(f" Unexpected ID: {prod_id}")
+            print(f"⚠️ Unexpected ID: {prod_id}")
 
     def get_motion(self):
         """Get motion data (delta X and delta Y)."""
